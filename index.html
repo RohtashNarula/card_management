@@ -313,6 +313,17 @@
       box-shadow: inset 0 0 24px rgba(28, 12, 3, 0.38);
     }
 
+    .hero-bg-art {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      z-index: 2;
+    }
+
     .hero-temple-arch-inner::after {
       content: '';
       position: absolute;
@@ -321,16 +332,6 @@
       border: 1px solid rgba(252, 231, 162, 0.62);
       pointer-events: none;
       z-index: 3;
-    }
-
-    .hero-bg-art {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 18%;
-      display: block;
-      z-index: 2;
     }
 
     .hero-nameplate-card {
@@ -902,59 +903,15 @@
       <div class="paper-fiber-overlay"></div>
 
       <!-- =========================================================
-           1. OPENED-CURTAIN HERO: COUPLE PHOTO + INVITATION DETAILS
+           1. OPENED-CURTAIN HERO: INVITATION DETAILS
            ========================================================= -->
       <section id="heroSection" class="hero-arch-stage">
         <div class="hero-temple-arch-frame">
           <div class="hero-temple-arch-inner">
-            <img id="heroDeityImg"
-                 src="couple_hero.png"
-                 alt="Aarav and Ananya celebrating together at the temple"
+            <img src="couple_hero.png"
+                 alt="Rohtash and Shweta celebrating together"
                  class="hero-bg-art"
-                 onerror="this.style.display='none';document.getElementById('heroDeityFallbackSvg').classList.remove('hidden');" />
-
-            <!-- Warm Golden-Ochre Oil Painting SVG Fallback (Mahadev applying sindoor to Parvati Mata) -->
-            <svg id="heroDeityFallbackSvg" viewBox="0 0 360 480" preserveAspectRatio="xMidYMid slice"
-                 class="hidden absolute inset-0 w-full h-full pointer-events-none z-[1]">
-              <defs>
-                <radialGradient id="ochreOilGlow" cx="56%" cy="34%" r="68%">
-                  <stop offset="0%" stop-color="#FCE3A1" />
-                  <stop offset="45%" stop-color="#C98A42" />
-                  <stop offset="82%" stop-color="#6E3B16" />
-                  <stop offset="100%" stop-color="#3A1B08" />
-                </radialGradient>
-                <radialGradient id="sindoorHalo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#FFF5D6" stop-opacity="0.88" />
-                  <stop offset="65%" stop-color="#F2B857" stop-opacity="0.3" />
-                  <stop offset="100%" stop-color="#8C4E1C" stop-opacity="0" />
-                </radialGradient>
-              </defs>
-              <rect width="360" height="480" fill="url(#ochreOilGlow)" />
-              <polygon points="150,240 245,115 355,240" fill="#E8C284" opacity="0.45" />
-              <polygon points="215,240 295,140 365,240" fill="#F8DFB0" opacity="0.42" />
-              <circle cx="205" cy="195" r="115" fill="url(#sindoorHalo)" />
-              <ellipse cx="122" cy="318" rx="58" ry="112" fill="#5D6D7E" stroke="#D9A858" stroke-width="1.5" />
-              <path d="M74,265 Q122,295 170,265 L178,430 L66,430 Z" fill="#8E5422" opacity="0.82" />
-              <path d="M92,248 Q122,292 152,248" fill="none" stroke="#4B240E" stroke-width="5.5" stroke-dasharray="3 3" />
-              <path d="M84,258 Q122,316 160,258" fill="none" stroke="#3B1A08" stroke-width="6" stroke-dasharray="3 3" />
-              <circle cx="124" cy="186" r="34" fill="#9EB4C8" stroke="#D9A858" stroke-width="1.4" />
-              <ellipse cx="122" cy="144" rx="22" ry="24" fill="#2A170C" />
-              <path d="M106,136 A16,16 0 1,0 132,126 A13,13 0 1,1 106,136 Z" fill="#FFF7DC" />
-              <path d="M111,175 Q124,178 137,175 M112,180 Q124,183 136,180 M113,185 Q124,188 135,185"
-                    fill="none" stroke="#FFFDF6" stroke-width="2" stroke-linecap="round" />
-              <path d="M158,256 Q192,226 218,236" fill="none" stroke="#9EB4C8" stroke-width="14" stroke-linecap="round" />
-              <circle cx="222" cy="238" r="5" fill="#E62E1B" />
-              <ellipse cx="242" cy="348" rx="64" ry="102" fill="#B52217" stroke="#F4CE74" stroke-width="2" />
-              <path d="M188,268 Q242,212 296,268 L314,445 L170,445 Z" fill="#C42B1E" opacity="0.92" />
-              <polygon points="212,224 272,224 260,192 224,192" fill="#E8B654" stroke="#7A4B12" stroke-width="1.5" />
-              <circle cx="242" cy="248" r="30" fill="#F2C29B" stroke="#D99B52" stroke-width="1.4" />
-              <circle cx="242" cy="236" r="3.5" fill="#E62E1B" />
-              <path d="M216,282 Q242,318 268,282" fill="none" stroke="#F7D57E" stroke-width="5" />
-              <path d="M208,292 Q242,344 276,292" fill="none" stroke="#E5AA3E" stroke-width="4.5" />
-              <ellipse cx="305" cy="442" rx="26" ry="9" fill="#B57B2A" stroke="#FCE7A2" stroke-width="1.2" />
-              <path d="M300,435 Q305,404 310,435 Z" fill="#FFAE34" />
-              <path d="M302,435 Q305,414 308,435 Z" fill="#FFF7C8" />
-            </svg>
+                 onerror="this.style.display='none';" />
           </div>
         </div>
 
@@ -1306,6 +1263,11 @@
             <input id="editAdditionalFamilyName" type="text" placeholder="Third family name"
                    class="w-full px-3 py-2 rounded-xl border border-[#D8B894] bg-white" />
           </div>
+          <div>
+            <label class="block font-semibold text-[#332116] mb-1">Fourth Family Name</label>
+            <input id="editFourthFamilyName" type="text" placeholder="Fourth family name"
+                   class="w-full px-3 py-2 rounded-xl border border-[#D8B894] bg-white" />
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
@@ -1440,23 +1402,12 @@
           </div>
         </div>
 
-        <div class="p-3 rounded-xl bg-[#FDF2E2] border border-[#E6C79C] space-y-2">
-          <label class="block font-semibold text-[#332116]">Opened-Curtain Couple Photo (Upload)</label>
-          <div class="flex items-center gap-2">
-            <input id="editHeroPhoto" type="file" accept="image/*"
-                   class="flex-1 px-2.5 py-1.5 rounded-xl border border-[#D8B894] bg-white text-[11px] file:mr-2 file:py-1 file:px-2.5 file:rounded-full file:border-0 file:text-[10.5px] file:font-semibold file:bg-[#F6E2C5] file:text-[#332116]" />
-            <button id="resetHeroPhotoBtn" type="button" class="px-2.5 py-1.5 rounded-xl bg-white border border-[#D8B894] text-[10.5px] font-semibold text-[#664936] cursor-pointer">
-              Reset
-            </button>
-          </div>
-        </div>
-
         <div class="p-3 rounded-xl bg-[#FDF2E2] border border-[#C89B4B]/60 space-y-2">
           <label class="block font-bold text-[#332116]">Shareable Guest Invitation Link</label>
           <input id="generatedShareUrlBox" type="text" readonly
                  placeholder="Click Copy Guest Link to create a short URL"
                  class="w-full px-3 py-2 rounded-xl bg-white border border-[#D8B894] text-[10.5px] text-[#4F3524]" />
-          <p class="text-[10px] text-[#664936]">Short links are created by is.gd when you copy or share.</p>
+          <p class="text-[10px] text-[#664936]">Works for every guest; the link contains the invitation details and can be forwarded.</p>
           <div class="grid grid-cols-2 gap-2">
             <button id="copyCustomUrlBtn" type="button"
                     class="py-2.5 px-3 rounded-xl font-semibold text-white text-[11px] cursor-pointer"
@@ -1493,7 +1444,6 @@
 
   <script>
     const DEFAULT_COVER_SRC = 'cover.jpg';
-    const DEFAULT_HERO_DEITY_SRC = 'couple_hero.png';
     const STORAGE_KEY = 'royal_wedding_invite_draft_v6';
 
     function formatOrdinalUpperDate(dateObj) {
@@ -1521,6 +1471,7 @@
         bride: 'Ananya',
         brideFamilyName: '',
         additionalFamilyName: '',
+        fourthFamilyName: '',
         isoDate: '2026-12-25',
         isoTime: '10:30',
         date: 'December 25, 2026',
@@ -1646,7 +1597,12 @@
     }
 
     function buildShareableUrl() {
-      const base = window.location.href.split('?')[0];
+      let base;
+      if (window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)) {
+        base = 'https://nixbusiness.github.io/narul/';
+      } else {
+        base = `${window.location.origin}${window.location.pathname}`;
+      }
       const token = encodeInvitePayload(inviteState.details);
       const shareUrl = new URL(base);
       if (token) shareUrl.searchParams.set('invite', token);
@@ -1684,10 +1640,10 @@
         response = await fetch(endpoint.toString());
       } catch (error) {
         console.error('Unable to contact the link-shortening service.', error);
-        throw new Error('Could not reach is.gd. Check your internet connection and try again.');
+        return longUrl;
       }
       if (!response.ok) {
-        throw new Error(`is.gd returned an error (${response.status}). Please try again.`);
+        return longUrl;
       }
 
       let result;
@@ -1695,23 +1651,24 @@
         result = await response.json();
       } catch (error) {
         console.error('The link-shortening service returned invalid JSON.', error);
-        throw new Error('is.gd returned an invalid response. Please try again.');
+        return longUrl;
       }
       if (!result || typeof result.shorturl !== 'string') {
         const errorMessage = result && typeof result.errormessage === 'string'
           ? result.errormessage
           : 'is.gd could not shorten this invitation link.';
-        throw new Error(errorMessage);
+        console.warn(errorMessage);
+        return longUrl;
       }
 
       let shortUrl;
       try {
         shortUrl = new URL(result.shorturl);
       } catch (error) {
-        throw new Error('is.gd returned an invalid link.');
+        return longUrl;
       }
       if (shortUrl.protocol !== 'https:' || shortUrl.hostname !== 'is.gd') {
-        throw new Error('is.gd returned an unexpected link.');
+        return longUrl;
       }
       cachedLongShareUrl = longUrl;
       cachedShortShareUrl = shortUrl.toString();
@@ -2723,6 +2680,7 @@
       const groomFamilyName = String(d.groomFamilyName || '').trim();
       const brideFamilyName = String(d.brideFamilyName || '').trim();
       const additionalFamilyName = String(d.additionalFamilyName || '').trim();
+      const fourthFamilyName = String(d.fourthFamilyName || '').trim();
       setTxt('outWeddingDate', d.date);
       setTxt('outWeddingDay', d.day);
       setTxt('outWeddingTime', d.time);
@@ -2735,7 +2693,7 @@
 
       const gName = (d.groom || 'Aarav').trim();
       const bName = (d.bride || 'Ananya').trim();
-      const familyNames = [groomFamilyName, brideFamilyName, additionalFamilyName].filter(Boolean);
+      const familyNames = [groomFamilyName, brideFamilyName, additionalFamilyName, fourthFamilyName].filter(Boolean);
       const familyNamesText = familyNames.length > 1
         ? `${familyNames.slice(0, -1).join(', ')} & ${familyNames[familyNames.length - 1]}`
         : familyNames[0] || '';
@@ -2767,6 +2725,7 @@
       ['editBride', 'bride'],
       ['editBrideFamilyName', 'brideFamilyName'],
       ['editAdditionalFamilyName', 'additionalFamilyName'],
+      ['editFourthFamilyName', 'fourthFamilyName'],
       ['editDate', 'date'],
       ['editDay', 'day'],
       ['editTime', 'time'],
@@ -2871,42 +2830,6 @@
         });
         if (editCoverPhoto) editCoverPhoto.value = '';
         showToast('Default Lord Ganesha cover restored');
-      });
-    }
-
-    const editHeroPhoto = document.getElementById('editHeroPhoto');
-    if (editHeroPhoto) {
-      editHeroPhoto.addEventListener('change', (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          const heroImg = document.getElementById('heroDeityImg');
-          const fallbackSvg = document.getElementById('heroDeityFallbackSvg');
-          if (heroImg) {
-            heroImg.src = reader.result;
-            heroImg.style.display = 'block';
-          }
-          if (fallbackSvg) fallbackSvg.classList.add('hidden');
-          showToast('Opened-curtain couple photo updated!');
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    const resetHeroPhotoBtn = document.getElementById('resetHeroPhotoBtn');
-    if (resetHeroPhotoBtn) {
-      resetHeroPhotoBtn.addEventListener('click', () => {
-        const heroImg = document.getElementById('heroDeityImg');
-        const fallbackSvg = document.getElementById('heroDeityFallbackSvg');
-        if (heroImg) {
-          delete heroImg.dataset.triedAlt1;
-          heroImg.src = DEFAULT_HERO_DEITY_SRC;
-          heroImg.style.display = 'block';
-        }
-        if (fallbackSvg) fallbackSvg.classList.add('hidden');
-        if (editHeroPhoto) editHeroPhoto.value = '';
-        showToast('Default couple photo restored');
       });
     }
 
