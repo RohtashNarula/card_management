@@ -2831,6 +2831,7 @@
     const toggleInlineEditBtn = document.getElementById('toggleInlineEditBtn');
 
     function openCustomizer() {
+      if (inviteState.guestMode) return;
       delete inviteState.details.gallery;
       populateEditorInputs();
       renderDynamicEditors();
@@ -2862,6 +2863,7 @@
 
     if (toggleInlineEditBtn) {
       toggleInlineEditBtn.addEventListener('click', () => {
+        if (inviteState.guestMode) return;
         inviteState.inlineEditMode = !inviteState.inlineEditMode;
         document.body.classList.toggle('inline-edit-active', inviteState.inlineEditMode);
         document.querySelectorAll('[data-editable]').forEach((el) => {
@@ -2941,12 +2943,14 @@
       const params = new URLSearchParams(window.location.search);
       const encodedInvite = params.get('invite');
 
-      if (encodedInvite) {
+      if (params.has('invite')) {
         const decoded = decodeInvitePayload(encodedInvite);
-        if (decoded && typeof decoded === 'object') {
+        if (decoded && typeof decoded === 'object' && !Array.isArray(decoded)) {
           inviteState.details = { ...getDefaultDetails(), ...decoded };
-          setGuestMode(true);
+        } else {
+          showToast('This guest invitation link is invalid or damaged.');
         }
+        setGuestMode(true);
       } else {
         try {
           const saved = localStorage.getItem(STORAGE_KEY);
