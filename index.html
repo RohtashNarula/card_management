@@ -964,13 +964,13 @@
           </div>
 
           <h1 class="hero-crimson-name text-[33px] sm:text-[35px]">
-            <span id="outGroomName" data-editable="groom">Aarav</span><span id="outGroomFamilyName" data-editable="groomFamilyName" class="ml-1"></span>
+            <span id="outGroomName" data-editable="groom">Aarav</span>
           </h1>
 
           <div class="font-script text-[22px] text-[#8B8578] leading-none my-1.5">&amp;</div>
 
           <h2 class="hero-crimson-name text-[33px] sm:text-[35px]">
-            <span id="outBrideName" data-editable="bride">Ananya</span><span id="outBrideFamilyName" data-editable="brideFamilyName" class="ml-1"></span>
+            <span id="outBrideName" data-editable="bride">Ananya</span>
           </h2>
 
           <div class="ed-divider my-2.5">
@@ -1204,24 +1204,15 @@
           </div>
 
           <div class="my-4 flex justify-center lazy-stagger" style="--stagger-idx: 1;">
-            <svg width="108" height="108" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="46" fill="#FFF9F0" stroke="#C89B4B" stroke-width="1.5" />
-              <circle cx="60" cy="60" r="40" fill="none" stroke="#4F563B" stroke-width="1" stroke-dasharray="3 2" />
-              <path d="M26,42 Q18,60 26,78 M94,42 Q102,60 94,78" fill="none" stroke="#4F563B" stroke-width="1.4" />
-              <circle cx="24" cy="60" r="4" fill="#E89B4C" />
-              <circle cx="96" cy="60" r="4" fill="#E89B4C" />
-              <text id="outMonogramInitials" x="60" y="67" text-anchor="middle" fill="#332116" font-family="'Alex Brush', cursive" font-size="30">
-                A &amp; A
-              </text>
-            </svg>
+            <img src="wedding_logo.png" alt="Rosh saga begin wedding emblem with flowers, a temple, and mountain scenery"
+                 width="256" height="256" loading="lazy"
+                 class="w-64 max-w-full h-auto object-contain lazy-stagger" />
           </div>
 
           <p id="outFooterClosing" data-editable="footerClosing" class="font-serif-ed italic text-base text-[#4F3524] lazy-stagger" style="--stagger-idx: 2;">
             With warm regards &amp; gratitude, we eagerly await your presence.
           </p>
-          <p id="outFooterCouple" class="font-script text-3xl text-[#332116] mt-1 lazy-stagger" style="--stagger-idx: 3;">
-            Aarav &amp; Ananya
-          </p>
+          <p id="outFooterCouple" class="font-ui text-lg font-semibold text-[#332116] mt-1 lazy-stagger" style="--stagger-idx: 3;" hidden></p>
           <div class="ed-divider mt-5 mb-0 lazy-stagger" style="--stagger-idx: 4;" aria-hidden="true">
             <span class="text-xs text-[#8D6220]">❖</span>
           </div>
@@ -1306,6 +1297,11 @@
           <div>
             <label class="block font-semibold text-[#332116] mb-1">Bride Family Name</label>
             <input id="editBrideFamilyName" type="text" placeholder="Family name"
+                   class="w-full px-3 py-2 rounded-xl border border-[#D8B894] bg-white" />
+          </div>
+          <div>
+            <label class="block font-semibold text-[#332116] mb-1">Third Family Name</label>
+            <input id="editAdditionalFamilyName" type="text" placeholder="Third family name"
                    class="w-full px-3 py-2 rounded-xl border border-[#D8B894] bg-white" />
           </div>
         </div>
@@ -1522,6 +1518,7 @@
         groomFamilyName: '',
         bride: 'Ananya',
         brideFamilyName: '',
+        additionalFamilyName: '',
         isoDate: '2026-12-25',
         isoTime: '10:30',
         date: 'December 25, 2026',
@@ -2748,12 +2745,7 @@
       setTxt('outBrideName', d.bride);
       const groomFamilyName = String(d.groomFamilyName || '').trim();
       const brideFamilyName = String(d.brideFamilyName || '').trim();
-      setTxt('outGroomFamilyName', groomFamilyName);
-      setTxt('outBrideFamilyName', brideFamilyName);
-      const groomFamilyEl = document.getElementById('outGroomFamilyName');
-      const brideFamilyEl = document.getElementById('outBrideFamilyName');
-      if (groomFamilyEl) groomFamilyEl.hidden = !groomFamilyName;
-      if (brideFamilyEl) brideFamilyEl.hidden = !brideFamilyName;
+      const additionalFamilyName = String(d.additionalFamilyName || '').trim();
       setTxt('outWeddingDate', d.date);
       setTxt('outWeddingDay', d.day);
       setTxt('outWeddingTime', d.time);
@@ -2766,11 +2758,13 @@
 
       const gName = (d.groom || 'Aarav').trim();
       const bName = (d.bride || 'Ananya').trim();
-      const groomFullName = [gName, groomFamilyName].filter(Boolean).join(' ');
-      const brideFullName = [bName, brideFamilyName].filter(Boolean).join(' ');
-      setTxt('outFooterCouple', `${groomFullName} & ${brideFullName}`);
-      setTxt('outMonogramInitials', `${gName.charAt(0).toUpperCase()} & ${bName.charAt(0).toUpperCase()}`);
-
+      const familyNames = [groomFamilyName, brideFamilyName, additionalFamilyName].filter(Boolean);
+      const familyNamesText = familyNames.length > 1
+        ? `${familyNames.slice(0, -1).join(', ')} & ${familyNames[familyNames.length - 1]}`
+        : familyNames[0] || '';
+      setTxt('outFooterCouple', familyNamesText);
+      const footerCoupleEl = document.getElementById('outFooterCouple');
+      if (footerCoupleEl) footerCoupleEl.hidden = !familyNamesText;
       const mapsHref = d.customMapUrl && d.customMapUrl.trim()
         ? d.customMapUrl.trim()
         : `https://maps.google.com/?q=${encodeURIComponent(`${d.venue} ${d.venueSub}`)}`;
@@ -2778,7 +2772,7 @@
       const gMapEl = document.getElementById('googleMapsBtn');
       if (openMapEl) openMapEl.href = mapsHref;
       if (gMapEl) gMapEl.href = mapsHref;
-      document.title = `${groomFullName} & ${brideFullName} — Wedding Invitation`;
+      document.title = `${gName} & ${bName} — Wedding Invitation`;
 
       renderDynamicSections();
       renderVenueMap();
@@ -2795,6 +2789,7 @@
       ['editGroomFamilyName', 'groomFamilyName'],
       ['editBride', 'bride'],
       ['editBrideFamilyName', 'brideFamilyName'],
+      ['editAdditionalFamilyName', 'additionalFamilyName'],
       ['editDate', 'date'],
       ['editDay', 'day'],
       ['editTime', 'time'],
