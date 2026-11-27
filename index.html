@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Aarav &amp; Ananya — Wedding Invitation</title>
+  <title>Rohtash &amp; Shweta — Wedding Invitation</title>
+  <meta property="og:title" content="Rohtash &amp; Shweta — Wedding Invitation" />
+  <meta property="og:description" content="You are invited to celebrate the wedding of Rohtash and Shweta." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -644,7 +646,7 @@
       <button id="audioBtn" type="button"
               class="top-pill-btn w-8 h-8 rounded-full shadow-md flex items-center justify-center transition active:scale-95"
               style="background: rgba(255, 248, 232, 0.94); color: #5B2408; border: 1px solid #D8A64E;"
-              aria-label="Toggle Temple Chimes">
+              aria-label="Toggle Background Music">
         <!-- Muted Speaker Icon -->
         <svg id="audioMutedIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
@@ -1560,8 +1562,6 @@
     const inviteState = {
       details: getDefaultDetails(),
       audioOn: false,
-      audioCtx: null,
-      audioTimer: null,
       scratchDone: false,
       mapZoom: 1,
       mapOffsetX: 0,
@@ -1570,6 +1570,11 @@
       guestMode: false,
       isOpening: false
     };
+
+    const backgroundMusic = new Audio('background_music.mp3');
+    backgroundMusic.loop = true;
+    backgroundMusic.preload = 'auto';
+    backgroundMusic.volume = 0.35;
 
     /* =========================================================
        UTILITY HELPERS (TOAST, ESCAPE, URL PAYLOAD CODEC)
@@ -1643,7 +1648,18 @@
     function buildShareableUrl() {
       const base = window.location.href.split('?')[0];
       const token = encodeInvitePayload(inviteState.details);
-      return token ? `${base}?invite=${token}` : base;
+      const shareUrl = new URL(base);
+      if (token) shareUrl.searchParams.set('invite', token);
+      shareUrl.searchParams.set('share_v', '2');
+      return shareUrl.toString();
+    }
+
+    function buildWhatsAppInviteMessage(details, shareUrl) {
+      const coupleNames = [details.groom, details.bride]
+        .map((name) => String(name || '').trim())
+        .filter(Boolean)
+        .join(' and ') || 'the couple';
+      return `ॐ नमः शिवाय\nWith the divine blessings of Mahadev & Parvati Mata, you are cordially invited to the wedding of *${coupleNames}* on *${details.date}* (${details.time}) at *${details.venue}*.\n\nOpen your interactive invitation:\n${shareUrl}`;
     }
 
     let cachedLongShareUrl = '';
@@ -1740,63 +1756,26 @@
       }
     }
 
-    /* =========================================================
-       AMBIENT TEMPLE CHIMES (WEB AUDIO API — SAFE TRY/CATCH)
-       ========================================================= */
-    function startMelody() {
-      try {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-        if (!inviteState.audioCtx) {
-          inviteState.audioCtx = new AudioContextClass();
-        }
-        if (inviteState.audioCtx.state === 'suspended') {
-          inviteState.audioCtx.resume().catch(() => {});
-        }
-        if (inviteState.audioTimer) clearInterval(inviteState.audioTimer);
-
-        const progression = [
-          [261.63, 329.63, 392.00, 493.88],
-          [220.00, 261.63, 329.63, 392.00],
-          [174.61, 220.00, 261.63, 349.23],
-          [196.00, 246.94, 293.66, 392.00]
-        ];
-        let step = 0;
-
-        const playStep = () => {
-          try {
-            if (!inviteState.audioOn || !inviteState.audioCtx) return;
-            const chord = progression[Math.floor(step / 4) % progression.length];
-            const freq = chord[step % 4];
-            const now = inviteState.audioCtx.currentTime;
-
-            const osc = inviteState.audioCtx.createOscillator();
-            const gain = inviteState.audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now);
-
-            gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.exponentialRampToValueAtTime(0.04, now + 0.06);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.75);
-
-            osc.connect(gain);
-            gain.connect(inviteState.audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 1.8);
-            step++;
-          } catch (innerErr) {}
-        };
-
-        playStep();
-        inviteState.audioTimer = setInterval(playStep, 560);
-      } catch (err) {}
+    function handleBackgroundMusicError(error) {
+      inviteState.audioOn = false;
+      refreshAudioIcon();
+      console.error('Unable to play the background music.', error);
+      showToast('Background music could not be played. Tap the sound button to try again.');
     }
 
-    function stopMelody() {
-      if (inviteState.audioTimer) {
-        clearInterval(inviteState.audioTimer);
-        inviteState.audioTimer = null;
+    function startBackgroundMusic() {
+      try {
+        const playback = backgroundMusic.play();
+        if (playback && typeof playback.catch === 'function') {
+          playback.catch(handleBackgroundMusicError);
+        }
+      } catch (error) {
+        handleBackgroundMusicError(error);
       }
+    }
+
+    function stopBackgroundMusic() {
+      backgroundMusic.pause();
     }
 
     function refreshAudioIcon() {
@@ -1812,10 +1791,10 @@
         e.stopPropagation();
         inviteState.audioOn = !inviteState.audioOn;
         if (inviteState.audioOn) {
-          startMelody();
-          showToast('Temple chimes unmuted ♪');
+          startBackgroundMusic();
+          showToast('Background music on ♪');
         } else {
-          stopMelody();
+          stopBackgroundMusic();
           showToast('Audio muted');
         }
         refreshAudioIcon();
@@ -1964,13 +1943,11 @@
         // Stage 1: Cover doors slide sideways outward
         cover.classList.add('is-entering');
 
-        try {
-          if (!inviteState.audioOn) {
-            inviteState.audioOn = true;
-            startMelody();
-            refreshAudioIcon();
-          }
-        } catch (audioErr) {}
+        if (!inviteState.audioOn) {
+          inviteState.audioOn = true;
+          startBackgroundMusic();
+          refreshAudioIcon();
+        }
 
         coverHideTimer = setTimeout(() => {
           cover.classList.add('is-hidden');
@@ -3038,10 +3015,7 @@
           const shareUrl = await createShortShareableUrl(buildShareableUrl());
           const shareBox = document.getElementById('generatedShareUrlBox');
           if (shareBox) shareBox.value = shareUrl;
-          const d = inviteState.details;
-          const msg = encodeURIComponent(
-            `ॐ नमः शिवाय\nWith the divine blessings of Mahadev & Parvati Mata, you are cordially invited to the wedding of *${[d.groom, d.groomFamilyName].filter(Boolean).join(' ')} & ${[d.bride, d.brideFamilyName].filter(Boolean).join(' ')}* on *${d.date}* (${d.time}) at *${d.venue}*.\n\nOpen your interactive invitation:\n${shareUrl}`
-          );
+          const msg = encodeURIComponent(buildWhatsAppInviteMessage(inviteState.details, shareUrl));
           whatsappWindow.opener = null;
           whatsappWindow.location.href = `https://wa.me/?text=${msg}`;
         } catch (error) {
